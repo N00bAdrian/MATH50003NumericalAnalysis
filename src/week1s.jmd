@@ -1,4 +1,4 @@
-# Week 1
+# MATH50003 Problem Sheet 1
 
 This problem sheet tests the representation of numbers on the computer, using
 modular arithmetic. We also use floating point rounding modes to implement 
@@ -12,7 +12,7 @@ using ColorBitstring, SetRounding
 ## 1. Binary representation
 
 
-**Problem 1.1** What is the binary representations of $1/5$? (Hint: use `printbits` to derive a proposed form.)
+**Problem 1.1** What is the binary representation of $1/5$? (Hint: use `printbits` to derive a proposed form.)
 
 **SOLUTION**
 Note that
@@ -51,8 +51,8 @@ printbits(Float16(π))
 
 **SOLUTION**
 We can find the binary digits by repeatedly subtracting the largest power of 2 less than a number
-until we reach 0, e.g. $10 -2^3 - 2 = 0$
-implies $10 = (101)_2$.
+until we reach 0, e.g. $10 - 2^3 - 2 = 0$
+implies $10 = (1010)_2$.
 Thus the bits are:
 ```julia
 printlnbits(Int8(10))
@@ -154,7 +154,7 @@ The next float after $2$ is $2 * (1 + 2^{-23})$ hence we get $2^{-22}$:
 ```julia
 nextfloat(2f0) - 2, 2^(-22)
 ```
-similarly, the next float after $1024 = 2^10$ is $2^{10-23} = 2^{-13}$:
+similarly, the next float after $1024 = 2^{10}$ is $2^{10-23} = 2^{-13}$:
 ```julia
  nextfloat(1024f0) - 1024, 2^(-13)
 ```
@@ -174,12 +174,48 @@ None of these computations have errors since they are all exactly representable 
 **Problem 4.2** For what floating point numbers is $x \oslash 2 \neq x/2$ and $x ⊕ 2 \neq x + 2$?
 
 **SOLUTION**
-Provided $x$ is normal, $x ⊘ 2 = x/2$. Thus $x$ needs to be sub-normal, with a non-zero last bit.
-Or `NaN`.
-Here's an example:
+
+Consider a normal $x = 2^{q-σ} (1.b_1\ldots b_S)_2$.
+Provided $q > 1$  we have
+$$
+x ⊘ 2 = x/2 = 2^{q-σ-1} (1.b_1\ldots b_S)_2
+$$
+However, if $q = 1$ we lose a bit as we shift:
+$$
+x ⊘ 2 = 2^{1-σ} (0.b_1\ldots b_{S-1})_2
+$$
+and the property will be satisfy if $b_S = 1$.
+Similarily if we are sub-normal, $x = 2^{1-σ} (0.b_1\ldots b_S)_2$ and
+we have
+$$
+x ⊘ 2 = 2^{1-σ} (0.0b_1\ldots b_{S-1})_2
+$$
+and the property will be satisfy if $b_S = 1$.
+(Or `NaN`.)
+
+Here are two examples:
 ```julia
+# normal number with q = 1 and last bit 1
+x = reinterpret(Float16, parse(UInt16, "0000010000000011"; base=2))
+x/2 == Float64(x)/2 # Float64 can exactly represent x/2
+```
+```julia
+# sub-normal number with q = 1 and last bit 1
 x = reinterpret(Float16, parse(UInt16, "0000000000000011"; base=2))
 x/2 == Float64(x)/2 # Float64 can exactly represent x/2
+```
+
+For the second part, Similar to the next problem,
+we see that the property holds true if $|x| < 2^{S+2}-1$, 
+as otherwise:
+```julia
+x = Float16(2)^(12)-1 # bits 0110110000000000
+x+2 == x
+```
+We see this is sharp:
+```julia
+y = prevfloat(x)
+y+2 == y
 ```
 
 
@@ -196,11 +232,11 @@ x + 1 == x
 
 Writing $10 = 2^3 (1.01)_2$ we have
 $$
-\rm{fl}(10^100) = \rm{fl}(2^{300} (1 + 2^{-4})^100) = 2^{300} (1.b_1 \ldots b_{52})_2
+\rm{fl}(10^{100}) = \rm{fl}(2^{300} (1 + 2^{-4})^{100}) = 2^{300} (1.b_1 \ldots b_{52})_2
 $$
 where the bits $b_k$ are not relevant. We then have:
 $$
-\rm{fl}(10^100) ⊕ 1 = \rm{fl}(2^{300} [(1.b_1 \ldots b_{52})_2 + 2^{-300}]) = \rm{fl}(10^100)
+\rm{fl}(10^{100}) ⊕ 1 = \rm{fl}(2^{300} [(1.b_1 \ldots b_{52})_2 + 2^{-300}]) = \rm{fl}(10^{100})
 $$
 since $2^{-300}$ is below the necessary precision.
 
@@ -210,7 +246,8 @@ $S = 52$. First note $2^{53}$ does not satisfy the condition:
 x = 2.0^53
 x + 1 == x
 ```
-We can however successfully create $2^{53} -1$ by subtracting (WHY?):
+We can however successfully create the previsous float $2^{53} -1$ by subtracting
+(Explain why this works while `x+1` fails):
 ```julia
 y = x - 1
 printlnbits(x)
@@ -220,11 +257,6 @@ And this satisfies:
 ```julia
 y + 1 ≠ y
 ```
-
-
-
-
-
 
 
 **Problem 4.4** What are the exact bits for $1/5$, $1/5 + 1$ computed
@@ -351,12 +383,13 @@ $$
 $$
 Write
 $$
-{1 \over 1 + δ_3} = 1 + \underbrace{-δ_3 + δ_3^2 + \cdots}_{δ_5}
+{1 \over 1 + δ_3} = 1 + \delta_5
 $$
 where
 $$
-|δ_5| \leq {ϵ_{\rm m} \over 2} {1 \over 1 - ϵ_{\rm m}/2} \leq ϵ_{\rm m}
+|δ_5| \leq \left| {\delta_3 \over 1 + \delta_3} \right| \leq  {ϵ_{\rm m} \over 2} {1 \over 1 - 1/2} \leq ϵ_{\rm m}
 $$
+using the fact that $|\delta_3| < 1/2$.
 Further write
 $$
 (1 + δ_5)(1 + δ_4) = 1 + δ_6
@@ -381,7 +414,7 @@ and the error is bounded by:
 $$
 (17 + 2 + 34) ϵ_{\rm m} = 53 ϵ_{\rm m}
 $$
-This is quite pessimitic but still captures that we are on the order of $ϵ_{\rm m}$.
+This is quite pessimistic but still captures that we are on the order of $ϵ_{\rm m}$.
 
 
 
@@ -412,10 +445,10 @@ $$
 \end{cases},\\
 A + B &= [a + c, b + d] \\
 AB &= \begin{cases}
-[cd,ab]& a,b,c,d < 0 \\
+[bd,ac]& a,b,c,d < 0 \\
 [ad,bc]& a,b < 0 \hbox{ and } c,d >0 \\
 [bc,ad]& a,b > 0 \hbox{ and } c,d  < 0 \\
-[ab,cd]& a,b,c,d >> 0
+[ac,bd]& a,b,c,d > 0
 \end{cases}
 \end{align*}
 $$
@@ -541,7 +574,7 @@ function *(x::Interval, y::Interval)
 end
 ```
 
-**Problem 5.4** The following function  computes the first `n+1` terms of the Taylor series of $\exp(x)$:
+**Problem 5.3** The following function  computes the first `n+1` terms of the Taylor series of $\exp(x)$:
 $$
 \sum_{k=0}^n {x^k \over k!}
 $$
@@ -582,11 +615,12 @@ function exp_bound(x::Interval, n)
     ## END
 end
 ```
-Check your result by assuring that
+Check your result for computing ${\rm ℯ}$ and ${\rm e}^{-1}$ by assuring that
 the following returns true:
 ```julia
 exp(big(1)) in exp_bound(Interval(1.0,1.0), 20) && exp(big(-1)) in exp_bound(Interval(-1.0,-1.0), 20)
 ```
+Further, ensure that the width of each returned interval is less than $10^{-14}$.
 
 **SOLUTION** From the Taylor remainder theorem we know the error is
 $$

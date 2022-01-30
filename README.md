@@ -3,22 +3,31 @@ Notes and course material for MATH50003 Numerical Analysis
 
 Lecturer: [Dr Sheehan Olver](https://www.ma.imperial.ac.uk/~solver/)
 
+Problem Classes: 2–4pm Thursdays, Huxley 340–342
 
-## Course Outline
+Overview lecture: 10–11am Fridays, Clore
+
+Q&A: 9:50–10:30 Mondays, 10:40–11:20 Tuesdays on Teams
+
+
+
+## Course notes
 
 **Background material**
 
-1. [Introduction to Julia](https://nbviewer.org/github/Imperial-MATH50003/MATH50003NumericalAnalysis/blob/main/notebooks/Julia.ipynb): we introduce the basic features of the Julia language.
+1. [Introduction to Julia](https://nbviewer.org/github/dlfivefifty/MATH50003NumericalAnalysis/blob/main/notebooks/Julia.ipynb): we introduce  the basic features of the Julia language.
+2. [Asymptotics and Computational Cost](https://nbviewer.org/github/dlfivefifty/MATH50003NumericalAnalysis/blob/main/notebooks/Asymptotics.ipynb): we review Big-O, little-o and asymptotic to notation,
+and their usage in describing computational cost.
 
 **Part I: Computing with numbers**
 
-1. [Numbers](https://nbviewer.org/github/Imperial-MATH50003/MATH50003NumericalAnalysis/blob/main/notebooks/Numbers.ipynb): we discuss how computers represent integers and real numbers, as well as their arithmetic operations.
-2. [Differentiation](https://nbviewer.org/github/Imperial-MATH50003/MATH50003NumericalAnalysis/blob/main/notebooks/Differentiation.ipynb): we discuss ways of approximating derivatives, including automatic differentiation, 
+1. [Numbers](https://nbviewer.org/github/dlfivefifty/MATH50003NumericalAnalysis/blob/main/notebooks/Numbers.ipynb): we discuss how computers represent integers and real numbers, as well as their arithmetic operations.
+2. [Differentiation](https://nbviewer.org/github/dlfivefifty/MATH50003NumericalAnalysis/blob/main/notebooks/Differentiation.ipynb): we discuss ways of approximating derivatives, including automatic differentiation, 
 which is essential to  machine learning.
 
 **Part II: Computing with matrices**
 
-1. Structured Matrices: we discuss types of structured matrices (permutations, orthogonal matrices, triangular, banded).
+1. [Structured Matrices](https://nbviewer.org/github/dlfivefifty/MATH50003NumericalAnalysis/blob/main/notebooks/StructuredMatrices.ipynb): we discuss types of structured matrices (permutations, orthogonal matrices, triangular, banded).
 3. Decompositions: we discuss algorithms for computing matrix decompositions (QR and PLU decompositions) and their use in solving linear systems.
 3. Norms and condition numbers: we discuss vector and
 matrix norms, and condition numbers for matrices, and the singular value decomposition.
@@ -33,19 +42,22 @@ functions from samples.
 2. Fourier series: we discuss Fourier series and their usage in numerical computations
 via the fast Fourier transform.
 5. Orthogonal Polynomials: we discuss orthogonal polynomials—polynomials orthogonal 
-with respect to a proscribed weight—and their usage in numerical computations.
+with respect to a prescribed weight—and their usage in numerical computations.
 6. Integration: we discuss ways to approximate integrals, both definite and indefinite, using orthogonal polynomials and interpolation.
 
 ## Assessment
 
-1. Practice mid-term (computer-based Julia exam): 25 March 2022 (TBC)
-2. Mid-term (computer-based Julia exam): 11 March 2022 (TBC)
-3. Practice final exam (pen-and-paper): Summer Term (TBC)
+1. Practice late-term exam (computer-based Julia exam, not for credit): 4 March 2022 (TBC)
+2. Late-term exam (computer-based Julia exam): 18 March 2022 (TBC)
+3. Practice final exam (pen-and-paper, not for credit): Summer Term (TBC)
 3. Final exam (pen-and-paper): Summer Term (TBC)
 
 ## Problem sheets
 
-1. [Week 1](https://nbviewer.org/github/Imperial-MATH50003/MATH50003NumericalAnalysis/blob/main/sheets/week1.ipynb): Binary representation, integers, floating point numbers, interval arithmetic
+1. [Week 1](https://nbviewer.org/github/dlfivefifty/MATH50003NumericalAnalysis/blob/main/sheets/week1.ipynb) ([Solutions](https://github.com/Imperial-MATH50003/MATH50003NumericalAnalysis/blob/main/sheets/week1s.ipynb)): Binary representation, integers, floating point numbers, and interval arithmetic
+1. [Week 2](https://nbviewer.org/github/dlfivefifty/MATH50003NumericalAnalysis/blob/main/sheets/week2.ipynb): Finite-differences, dual numbers, and Newton iteration
+1. [Week 3](https://nbviewer.org/github/dlfivefifty/MATH50003NumericalAnalysis/blob/main/sheets/week3.ipynb): dense, triangular, banded, permutation, and rotation matrices
+
 
 ## Reading List
 
@@ -55,6 +67,13 @@ with respect to a proscribed weight—and their usage in numerical computations.
 4. [The Julia Documentation](https://docs.julialang.org)
 5. [The Julia–Matlab–Python Cheatsheet](https://cheatsheets.quantecon.org)
 
+
+## Notes from lectures
+
+1. [Integers](lectures/Integers.png)
+2. [Floating Point Numbers](lectures/FloatingPoint.jpg)
+3. [Floating Point Arithmetic](lectures/Arithmetic.jpg)
+4. [Bounding Errors in Rounding](lectures/Rounding.jpg)
 
 ## What is numerical analysis? 
 
